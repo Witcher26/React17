@@ -1,7 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react'
-import { render } from '@testing-library/react';
 import TodoList from './TodoList';
 import TodoAdd from './TodoAdd';
 
@@ -43,7 +41,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar is-light">
+        <nav className="navbar is-dark">
           <div className='navbar-brand'>
             <span className='navbar-item is-uppercase'>
               Todos
@@ -52,16 +50,14 @@ export default class App extends Component {
         </nav>
         <main className='content px-6 mt-6'>
           <TodoList list={this.state.data} setDone={this.setDone} delete ={this.delete}/>
-          <TodoAdd />
+          <TodoAdd add = {this.add}/>
         </main>
       </div>
     );
   }
 
   setDone(key) {
-    const deed = this.state.data.find(
-      (curent) => curent.key === key
-    );
+    const deed = this.state.data.find((curent) => curent.key === key);
 
     if (deed)
       deed.done = true;
@@ -69,15 +65,16 @@ export default class App extends Component {
   }
 
   delete(key) {
-    const newData = this.state.data.filter(
-      (curent) => curent.key !== key
-    );
+    const newData = this.state.data.filter((curent) => curent.key !== key);
     this.setState((state) => ({data: newData}))
   }
 
   add(deed) {
     this.state.data.push(deed);
-    this.setState( (state) => ({}));
+    this.setState( (state) => ({}));/* почему возвращает пустой объект???  Мы добавляем новое дело в массив из свойства data
+                                     объекта состояния и изменяем состояние, не меняя значений его свойств)
+                                     */
+
   }
 }
 

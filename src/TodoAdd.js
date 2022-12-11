@@ -20,15 +20,15 @@ export default class TodoAdd extends Component {
     }
 
     handleTitleChange(evt) {
-        this.formData.title=evt.targer.value;
+        this.formData.title=evt.target.value;
     }
 
     handleDescChange(evt) {
-        this.formData.desc=evt.targer.value;
+        this.formData.desc=evt.target.value;
     }
 
     handleImageChange(evt) {
-        const cFiles = evt.targer.files;
+        const cFiles = evt.target.files;
         if(cFiles.length > 0) {
             const fileReader = new FileReader();
             const that = this;
@@ -94,10 +94,10 @@ export default class TodoAdd extends Component {
                     <div className='field is-grouped is-grouped-right'>
                         <div className='control'>
                             <input type='reset' className="button is-link is-light"
-                                value="Сброс"/>
+                                value="Сброс"/> 
                         </div>
                         <div className='control'>
-                            <input type="submit" className='button is-primary'
+                            <input type="submit" className='button is-primary'//зелёная кнопка
                                 value="Создать дело"/>
                         </div>
                     </div>

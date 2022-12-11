@@ -16,7 +16,7 @@ export default function TodoList(props) {
                                     className="button is-success"
                                     title="Пометить как сделанное"
                                     disabled={item.done}
-                                    onClick={(e) => props.setDone(item.key)}
+                                    onClick={(e) => props.setDone(item.key)}// подъём данных
                                 >
                                     &#9745;
                                 </button>
@@ -26,7 +26,7 @@ export default function TodoList(props) {
                                 <button
                                     className="button is-danger"
                                     title="Удалить"
-                                    onClick={(e) => props.delete(item.key)}
+                                    onClick={(e) => props.delete(item.key)} //подъём данных
                                 >
                                     &#9746;
                                 </button>
