@@ -1,8 +1,10 @@
-import { Component } from 'react'
+import { Component } from 'react';
+import { Navigate } from 'react-router-dom';
 
 export default class TodoAdd extends Component {
     constructor(props) {
         super(props);
+        this.state = {redirect: false};
         this.clearFormData = this.clearFormData.bind(this);
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -49,11 +51,13 @@ export default class TodoAdd extends Component {
         newDeed.createdAt=date.toLocaleString();
         newDeed.key = date.getTime();
         this.props.add(newDeed);
-        this.clearFormData();
-        evt.target.reset();
+        this.setState((state) => ({redirect: true}));
     }
 
     render() {
+        if(this.state.redirect)
+            return <Navigate to='/' />;
+        else
         return (
             <section>
                 <h1>
