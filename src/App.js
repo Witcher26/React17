@@ -8,7 +8,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Register from './Register';
 import firebaseApp from './firebase';
 import Logout from './Logout';
-import Login from './Register';
+import Login from './Login';
 
 const date1 = new Date(2021, 7, 19, 14, 5);
 const date2 = new Date(2021, 7, 19, 15, 23);
@@ -37,7 +37,7 @@ const initialData = [
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: initialData, showMenu: false, currentUser: undefined};
+    this.state = { data: initialData, showMenu: false, currentUser: undefined };
     this.setDone = this.setDone.bind(this);
     this.delete = this.delete.bind(this);
     this.add = this.add.bind(this);
@@ -47,12 +47,12 @@ export default class App extends Component {
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
     onAuthStateChanged(getAuth(firebaseApp), this.authStateChanged);
   }
 
   authStateChanged(user) {
-    this.setState((state) =>({currentUser: user}));
+    this.setState((state) => ({ currentUser: user }));
   }
 
   showMenu(evt) {
@@ -94,46 +94,49 @@ export default class App extends Component {
             'navbar-menu'}
             onClick={this.showMenu}>
             <div className='navbar-start'>
-              {this.state.currentUser &&(
-              <NavLink
-                to="/add"
-                className={({ isActive }) =>
-                  'navbar-item' + (isActive ? ' is-active' : '')
-                }>
+              {this.state.currentUser && (
+                <NavLink
+                  to="/add"
+                  className={({ isActive }) =>
+                    'navbar-item' + (isActive ? ' is-active' : '')
+                  }>
 
-                Создать дело
-              </NavLink>
+                  Создать дело
+                </NavLink>
               )}
 
               {this.state.currentUser && (
-                <NavLink to="/login" className={({isActive})=> 
-              'navbar-item' + (isActive ? 'is-active':'')}>
-               Войти
-              </NavLink>
+                <NavLink to="/login" className={({ isActive }) =>
+                  'navbar-item' + (isActive ? 'is-active' : '')}>
+                  Войти
+                </NavLink>
               )}
 
               {!this.state.currentUser && (
-                <NavLink to="/register" className={({isActive})=> 
-              'navbar-item' + (isActive ? 'is-active':'')}>
-                Зарегистрироваться
-              </NavLink>
+                <NavLink to="/register"
+                  className={({ isActive }) =>
+                    'navbar-item' + (isActive ? ' is-active' : '')
+                  }
+                >
+                  Зарегистрироваться
+                </NavLink>
               )}
             </div>
             {this.state.currentUser && (
-              <div className='navbar=end'>
-                <NavLink to="/logout" className={({isActive})=> 
-              'navbar-item' + (isActive ? 'is-active':'')}>
-                Выйти
-              </NavLink>
+              <div className='navbar-end'>
+                <NavLink to="/logout" className={({ isActive }) =>
+                  'navbar-item' + (isActive ? 'is-active' : '')}>
+                  Выйти
+                </NavLink>
               </div>
-              )}
+            )}
           </div>
         </nav>
         <main className='content px-6 mt-6'>
 
           <Routes>
             <Route path="/" element={
-              <TodoList list={this.state.data}
+              <TodoList list={this.state.data} ff
                 setDone={this.setDone}
                 delete={this.delete} />
             } />
@@ -144,9 +147,11 @@ export default class App extends Component {
             <Route path="/key" element={
               <TodoDetail getDeed={this.getDeed} /> //в пропе element записывается целевой компонент
             } />
-            <Route path="/register" element ={<Register currentUser ={this.state.currentUser}/>}/>
-            <Route path="/login" element ={<Login currentUser ={this.state.currentUser}/>}/>
-            <Route path="/logout" element ={<Logout currentUser ={this.state.currentUser}/>}/>
+            <Route path="/register" element={
+              <Register currentUser={this.state.currentUser} />
+            } />
+            <Route path="/login" element={<Login currentUser={this.state.currentUser} />} />
+            <Route path="/logout" element={<Logout currentUser={this.state.currentUser} />} />
           </Routes>
         </main>
       </HashRouter>
