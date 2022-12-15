@@ -1,16 +1,17 @@
 import { Component } from 'react';
 import { Navigate } from 'react-router-dom';
+import { add } from './api';
 
 export default class TodoAdd extends Component {
     constructor(props) {
         super(props);
-        this.state = {redirect: false};
+        this.state = { redirect: false };
         this.clearFormData = this.clearFormData.bind(this);
         this.handleDescChange = this.handleDescChange.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
         this.handleTitleChange = this.handleTitleChange.bind(this);
-       
+
     }
 
     clearFormData() {
@@ -22,16 +23,16 @@ export default class TodoAdd extends Component {
     }
 
     handleTitleChange(evt) {
-        this.formData.title=evt.target.value;
+        this.formData.title = evt.target.value;
     }
 
     handleDescChange(evt) {
-        this.formData.desc=evt.target.value;
+        this.formData.desc = evt.target.value;
     }
 
     handleImageChange(evt) {
         const cFiles = evt.target.files;
-        if(cFiles.length > 0) {
+        if (cFiles.length > 0) {
             const fileReader = new FileReader();
             const that = this;
             fileReader.onload = () => {
@@ -39,75 +40,77 @@ export default class TodoAdd extends Component {
             }
 
             fileReader.readAsDataURL(cFiles[0]);
-        }else
-            this.formData.image='';
+        } else
+            this.formData.image = '';
     }
 
-    handleFormSubmit(evt) {
+    async handleFormSubmit(evt) {
         evt.preventDefault();
-        const newDeed = {...this.formData};
+        const newDeed = { ...this.formData };
         const date = new Date();
-        newDeed.done=false;
-        newDeed.createdAt=date.toLocaleString();
-        newDeed.key = date.getTime();
-        this.props.add(newDeed);
-        this.setState((state) => ({redirect: true}));
+        newDeed.done = false;
+        newDeed.createdAt = date.toLocaleString();
+        const addedDeed = await add(this.props.currentUser, newDeed);
+        this.props.add(addedDeed);
+        this.setState((state) => ({ redirect: true }));
     }
 
     render() {
-        if(this.state.redirect)
+        if (!this.currentUser)
+            return <Navigate to="/login" replace />
+        else if (this.state.redirect)
             return <Navigate to='/' />;
         else
-        return (
-            <section>
-                <h1>
-                    Создание нового дела
-                </h1>
-                <form onSubmit={this.handleFormSubmit}>
-                    <div className='field'>
-                        <label className='label'>Заголоок</label>
-                        <div className='control'>
-                            <input className='input'
-                                    onChange={this.handleTitleChange}/>
-
-                        </div>
-                    </div>
-
-                    <div className='field'>
-                        <label className='label'>Примечания</label>
-                        <div className='control'>
-                            <textarea className='textarea'
-                                onChange={this.handleDescChange}/>
-                        </div>
-                    </div>
-
-                    <div className='field'>
+            return (
+                <section>
+                    <h1>
+                        Создание нового дела
+                    </h1>
+                    <form onSubmit={this.handleFormSubmit}>
                         <div className='field'>
-                            <label className='file-label'>
-                                <input className='file-input'
-                                    type = 'file' accept='image/*'
-                                    onChange={this.handleImageChange} />
+                            <label className='label'>Заголоок</label>
+                            <div className='control'>
+                                <input className='input'
+                                    onChange={this.handleTitleChange} />
+
+                            </div>
+                        </div>
+
+                        <div className='field'>
+                            <label className='label'>Примечания</label>
+                            <div className='control'>
+                                <textarea className='textarea'
+                                    onChange={this.handleDescChange} />
+                            </div>
+                        </div>
+
+                        <div className='field'>
+                            <div className='field'>
+                                <label className='file-label'>
+                                    <input className='file-input'
+                                        type='file' accept='image/*'
+                                        onChange={this.handleImageChange} />
                                     <span className='file-cta'>
                                         <span className='file-label'>
                                             Графическая иллюстрация...
                                         </span>
                                     </span>
-                            </label>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div className='field is-grouped is-grouped-right'>
-                        <div className='control'>
-                            <input type='reset' className="button is-link is-light"
-                                value="Сброс"/> 
+                        <div className='field is-grouped is-grouped-right'>
+                            <div className='control'>
+                                <input type='reset' className="button is-link is-light"
+                                    value="Сброс" />
+                            </div>
+                            <div className='control'>
+                                <input type="submit" className='button is-primary'//зелёная кнопка
+                                    value="Создать дело" />
+                            </div>
                         </div>
-                        <div className='control'>
-                            <input type="submit" className='button is-primary'//зелёная кнопка
-                                value="Создать дело"/>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        );
+                    </form>
+                </section>
+            );
     }
 
 }

@@ -9,35 +9,14 @@ import Register from './Register';
 import firebaseApp from './firebase';
 import Logout from './Logout';
 import Login from './Login';
-
-const date1 = new Date(2021, 7, 19, 14, 5);
-const date2 = new Date(2021, 7, 19, 15, 23);
-
-const initialData = [
-  {
-    title: "Изучить Реакт",
-    desc: "Да поскорее!",
-    image: '',
-    done: true,
-    createAt: date1.toLocaleString(),
-    key: date1.getTime()
-  },
-
-  {
-    title: "Написать первое приложение Реакт",
-    desc: "Список запланированных дел",
-    image: '',
-    done: false,
-    createAt: date2.toLocaleString(),
-    key: date2.getTime()
-  }
-
-];
+import { getList, setDone, del } from './api';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: initialData, showMenu: false, currentUser: undefined };
+    this.state = { data: [], 
+      showMenu: false, 
+      currentUser: undefined };
     this.setDone = this.setDone.bind(this);
     this.delete = this.delete.bind(this);
     this.add = this.add.bind(this);
@@ -51,8 +30,13 @@ export default class App extends Component {
     onAuthStateChanged(getAuth(firebaseApp), this.authStateChanged);
   }
 
-  authStateChanged(user) {
+  async authStateChanged(user) {
     this.setState((state) => ({ currentUser: user }));
+    if(user) {
+      const newData = await getList(user);
+      this.setState.apply((state) => ({data: newData}));
+    } else
+      this.setState((state) => ({data:[]}));
   }
 
   showMenu(evt) {
@@ -138,14 +122,17 @@ export default class App extends Component {
             <Route path="/" element={
               <TodoList list={this.state.data} ff
                 setDone={this.setDone}
-                delete={this.delete} />
+                delete={this.delete} 
+                currentUser={this.currentUser}/>
             } />
 
             <Route path="/add" element={
-              <TodoAdd add={this.add} />
+              <TodoAdd add={this.add}
+                            currentUser ={this.state.currentUser} />
             } />
-            <Route path="/key" element={
-              <TodoDetail getDeed={this.getDeed} /> //в пропе element записывается целевой компонент
+            <Route path="/:key" element={
+              <TodoDetail getDeed={this.getDeed} 
+              currentUser = {this.currentUser}/> //в пропе element записывается целевой компонент
             } />
             <Route path="/register" element={
               <Register currentUser={this.state.currentUser} />
@@ -159,7 +146,8 @@ export default class App extends Component {
   }
 
 
-  setDone(key) {
+  async setDone(key) {
+    await setDone(this.state.currentUser, key);
     const deed = this.state.data.find((curent) => curent.key === key);
 
     if (deed)
@@ -167,7 +155,8 @@ export default class App extends Component {
     this.setState((state) => ({}))
   }
 
-  delete(key) {
+  async delete(key) {
+    await del (this.state.currentUser, key);
     const newData = this.state.data.filter((curent) => curent.key !== key);
     this.setState((state) => ({ data: newData }))
   }
@@ -180,7 +169,7 @@ export default class App extends Component {
 
   }
   getDeed(key) {
-    key = +key; //преобразование индентификатора в число
+    // key = +key; //преобразование индентификатора в число
     return this.state.data.find((item) => item.key === key);
   }
 }
