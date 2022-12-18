@@ -1,3 +1,25 @@
+# Приложение todos - список дел:
+`Выполненные дела отмечены как зачёркнутые`
+
+![Список дел](/public/Images/1_Todos_List.JPG)
+#
+
+`Переход в конкретный todo`
+
+![Список дел](/public/Images/2_todo.JPG)
+#
+
+`Форма заведения дел`
+
+![Список дел](/public/Images/3_Form.JPG)
+#
+
+## Список дел хранится в базе данных `Google Firebase`
+#
+## Для старта приложения необходимо запустить скрипт `npm start`
+
+#
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
